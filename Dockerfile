@@ -29,6 +29,7 @@ USER samuel
 
 # All users can use /home/samuel as their home directory.
 ENV HOME=/home/samuel
+COPY entrypoint.sh $HOME
 RUN mkdir $HOME/.cache $HOME/.config $HOME/.pip \
  && echo '[global]' > $HOME/.pip/pip.conf \
  && echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf \
@@ -36,12 +37,9 @@ RUN mkdir $HOME/.cache $HOME/.config $HOME/.pip \
  && echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
  && chmod -R 777 $HOME
 
-COPY entrypoint.sh $HOME
-RUN chown -R samuel:samuel /home/samuel/entrypoint.sh
-
 # Exposed Ports
 EXPOSE 7860
 
-ENTRYPOINT ["/home/samuel/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 # Set the default command.
 CMD ["/bin/bash","webui.sh"]
