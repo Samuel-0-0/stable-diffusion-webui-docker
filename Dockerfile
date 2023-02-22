@@ -15,7 +15,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
     libgl1-mesa-glx \
     libglib2.0-dev \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
 
 ENV HOME=/home/samuel
 COPY entrypoint.sh $HOME
@@ -27,8 +30,7 @@ RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
  echo '[global]' > $HOME/.pip/pip.conf && \
  echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf && \
  echo '[install]' >> $HOME/.pip/pip.conf \
- echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf && \
- chmod -R 777 $HOME
+ echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf
 
 WORKDIR /config
 
