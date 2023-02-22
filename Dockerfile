@@ -4,7 +4,7 @@ FROM nvidia/cuda:12.0.1-base-ubuntu22.04
 RUN rm -f /etc/apt/sources.list.d/*.list
 
 # Install some basic utilities.
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     sudo \
@@ -17,31 +17,24 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# Create a working directory.
-RUN mkdir -p /app/stable-diffusion-webui
-WORKDIR /app/stable-diffusion-webui
+ENV HOME=/home/samuel
+COPY entrypoint.sh $HOME
 
 # Create a non-root user and switch to it.
-RUN addgroup -g 1000 samuel \
- && adduser -u 1000 -G samuel --disabled-password --gecos '' --shell /bin/bash samuel \
- && chown -R samuel:samuel /app \
- && echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-samuel
-USER samuel
+RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
+ usermod -G users samuel && \
+ mkdir -p /config $HOME/.pip && \
+ echo '[global]' > $HOME/.pip/pip.conf && \
+ echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf && \
+ echo '[install]' >> $HOME/.pip/pip.conf \
+ echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf && \
+ chmod -R 777 $HOME
 
-# All users can use /home/samuel as their home directory.
-ENV HOME=/home/samuel
-RUN mkdir $HOME/.cache $HOME/.config $HOME/.pip \
- && echo '[global]' > $HOME/.pip/pip.conf \
- && echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf \
- && echo '[install]' >> $HOME/.pip/pip.conf \
- && echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
- && chmod -R 777 $HOME
+WORKDIR /config
 
-COPY --chown=samuel:samuel entrypoint.sh $HOME
-
-# Exposed Ports
 EXPOSE 7860
+VOLUME /config
 
-ENTRYPOINT ["/app/entrypoint.sh"]
-# Set the default command.
+ENTRYPOINT ["$HOME/entrypoint.sh"]
+
 CMD ["/bin/bash","webui.sh"]
