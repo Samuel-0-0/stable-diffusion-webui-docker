@@ -38,6 +38,6 @@ WORKDIR /config
 EXPOSE 7860
 VOLUME /config
 
-ENTRYPOINT ["/home/samuel/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash","/home/samuel/entrypoint.sh"]
 
 CMD ["/bin/bash","webui.sh"]
