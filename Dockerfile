@@ -17,27 +17,27 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-dev \
  && rm -rf /var/lib/apt/lists/*
 
-# Create a working directory.
-RUN mkdir -p /app/stable-diffusion-webui
-WORKDIR /app/stable-diffusion-webui
-
 # Create a non-root user and switch to it.
-RUN adduser --disabled-password --gecos '' --shell /bin/bash samuel \
- && chown -R samuel:samuel /app
-RUN echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-samuel
+RUN adduser --disabled-password --gecos '' --shell /bin/bash samuel && \
+ echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-samuel
 USER samuel
 
 # All users can use /home/samuel as their home directory.
 ENV HOME=/home/samuel
-RUN mkdir $HOME/.cache $HOME/.config $HOME/.pip \
+COPY entrypoint.sh $HOME
+RUN mkdir $HOME/stable-diffusion-webui $HOME/.cache $HOME/.config $HOME/.pip \
  && echo '[global]' > $HOME/.pip/pip.conf \
  && echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf \
  && echo '[install]' >> $HOME/.pip/pip.conf \
  && echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
- && chmod -R 777 $HOME
+ && chmod -R 777 $HOME \
+ && chown -R samuel:samuel $HOME
+
+WORKDIR $HOME/stable-diffusion-webui
 
 # Exposed Ports
 EXPOSE 7860
 
+ENTRYPOINT ["/home/samuel/entrypoint.sh"]
 # Set the default command.
 CMD ["/bin/bash","webui.sh"]
