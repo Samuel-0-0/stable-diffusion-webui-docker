@@ -30,12 +30,10 @@ USER samuel
 # All users can use /home/samuel as their home directory.
 ENV HOME=/home/samuel
 RUN mkdir $HOME/.cache $HOME/.config $HOME/.pip \
- && cat > $HOME/.pip/pip.conf << EOF \
-[global] \
-index-url = https://pypi.tuna.tsinghua.edu.cn/simple \
-[install] \
-trusted-host=pypi.tuna.tsinghua.edu.cn \
-EOF \
+ && echo '[global]' > $HOME/.pip/pip.conf \
+ && echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' > $HOME/.pip/pip.conf \
+ && echo '[install]' > $HOME/.pip/pip.conf \
+ && echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' > $HOME/.pip/pip.conf \
  && chmod -R 777 $HOME
 
 # Exposed Ports
