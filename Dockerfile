@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 
 # Create a working directory.
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir /app/stable-diffusion-webui
+WORKDIR /app/stable-diffusion-webui
 
 # Create a non-root user and switch to it.
 RUN adduser --disabled-password --gecos '' --shell /bin/bash samuel \
@@ -29,8 +29,16 @@ USER samuel
 
 # All users can use /home/samuel as their home directory.
 ENV HOME=/home/samuel
-RUN mkdir $HOME/.cache $HOME/.config \
+RUN mkdir $HOME/.cache $HOME/.config $HOME/.pip \
+ && cat > $HOME/.pip/pip.conf << EOF
+[global]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+[install]
+trusted-host=pypi.tuna.tsinghua.edu.cn
+EOF \
  && chmod -R 777 $HOME
 
+EXPOSE 7860
+
 # Set the default command.
-CMD ["/bin/bash"]
+CMD ["/bin/bash","webui.sh"]
