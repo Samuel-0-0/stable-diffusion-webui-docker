@@ -25,11 +25,12 @@ ENV HOME=/home/samuel
 # Create a non-root user and switch to it.
 RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
  usermod -G users samuel && \
- mkdir -p /config $HOME/.pip && \
+ mkdir -p /config $HOME/.cache $HOME/.config $HOME/.pip && \
  echo '[global]' > $HOME/.pip/pip.conf && \
  echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf && \
  echo '[install]' >> $HOME/.pip/pip.conf \
- echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf
+ echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
+ && chmod -R 777 $HOME
 
 COPY --chown=samuel:users entrypoint.sh $HOME
 
