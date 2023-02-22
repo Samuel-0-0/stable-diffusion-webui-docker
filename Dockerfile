@@ -21,7 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     /var/tmp/*
 
 ENV HOME=/home/samuel
-COPY entrypoint.sh $HOME
 
 # Create a non-root user and switch to it.
 RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
@@ -31,6 +30,8 @@ RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
  echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf && \
  echo '[install]' >> $HOME/.pip/pip.conf \
  echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf
+
+COPY entrypoint.sh $HOME
 
 WORKDIR /config
 
