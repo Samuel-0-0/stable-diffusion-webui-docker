@@ -23,8 +23,8 @@ WORKDIR /app/stable-diffusion-webui
 
 # Create a non-root user and switch to it.
 RUN adduser --disabled-password --gecos '' --shell /bin/bash samuel \
- && chown -R samuel:user /app
-RUN echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-user
+ && chown -R samuel:samuel /app
+RUN echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-samuel
 USER samuel
 
 # All users can use /home/samuel as their home directory.
