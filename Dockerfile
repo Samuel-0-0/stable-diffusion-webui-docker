@@ -38,6 +38,7 @@ trusted-host=pypi.tuna.tsinghua.edu.cn
 EOF \
  && chmod -R 777 $HOME
 
+# Exposed Ports
 EXPOSE 7860
 
 # Set the default command.
