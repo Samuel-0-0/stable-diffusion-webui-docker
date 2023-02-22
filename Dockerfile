@@ -30,8 +30,8 @@ RUN mkdir $HOME/stable-diffusion-webui $HOME/.cache $HOME/.config $HOME/.pip \
  && echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf \
  && echo '[install]' >> $HOME/.pip/pip.conf \
  && echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
- && chmod -R 777 $HOME \
- && chown -R samuel:samuel $HOME
+ && chmod -R 777 $HOME
+RUN chown -R samuel:samuel $HOME
 
 WORKDIR $HOME/stable-diffusion-webui
 
