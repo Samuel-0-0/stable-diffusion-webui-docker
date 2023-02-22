@@ -1,3 +1,7 @@
 #!/bin/sh
 
-exec "$@"
+cd /config
+
+/bin/bash webui.sh
+
+sleep infinity
