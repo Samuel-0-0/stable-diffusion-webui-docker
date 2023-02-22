@@ -30,7 +30,8 @@ RUN useradd -u 99 -U -d /config -s /bin/false samuel && \
  echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple' >> $HOME/.pip/pip.conf && \
  echo '[install]' >> $HOME/.pip/pip.conf \
  echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
- && chmod -R 777 $HOME
+ && chmod -R 777 $HOME \
+ && sed -i 's/^net.ipv4.ip_forward.*/net.ipv4.ip_forward = 1/' /etc/sysctl.conf
 
 COPY --chown=samuel:users entrypoint.sh $HOME
 
