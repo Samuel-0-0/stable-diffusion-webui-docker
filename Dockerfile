@@ -17,9 +17,14 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-dev \
  && rm -rf /var/lib/apt/lists/*
 
+# Create a working directory.
+RUN mkdir -p /app/stable-diffusion-webui
+WORKDIR /app/stable-diffusion-webui
+
 # Create a non-root user and switch to it.
-RUN adduser --disabled-password --gecos '' --shell /bin/bash samuel && \
- echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-samuel
+RUN adduser --disabled-password --gecos '' --shell /bin/bash samuel \
+ && chown -R samuel:samuel /app \
+ && echo "samuel ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-samuel
 USER samuel
 
 # All users can use /home/samuel as their home directory.
@@ -31,7 +36,6 @@ RUN mkdir $HOME/stable-diffusion-webui $HOME/.cache $HOME/.config $HOME/.pip \
  && echo '[install]' >> $HOME/.pip/pip.conf \
  && echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf \
  && chmod -R 777 $HOME
-RUN chown -R samuel:samuel $HOME
 
 WORKDIR $HOME/stable-diffusion-webui
 
