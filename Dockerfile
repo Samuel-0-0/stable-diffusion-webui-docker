@@ -31,7 +31,7 @@ RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
  echo '[install]' >> $HOME/.pip/pip.conf \
  echo 'trusted-host=pypi.tuna.tsinghua.edu.cn' >> $HOME/.pip/pip.conf
 
-COPY entrypoint.sh $HOME
+COPY --chown=samuel:users entrypoint.sh $HOME
 
 WORKDIR /config
 
