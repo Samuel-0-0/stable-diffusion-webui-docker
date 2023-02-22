@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV HOME=/home/samuel
 
 # Create a non-root user and switch to it.
-RUN useradd -u 911 -U -d /config -s /bin/false samuel && \
+RUN useradd -u 99 -U -d /config -s /bin/false samuel && \
  usermod -G users samuel && \
  mkdir -p /config $HOME/.cache $HOME/.config $HOME/.pip && \
  echo '[global]' > $HOME/.pip/pip.conf && \
@@ -39,6 +39,4 @@ WORKDIR /config
 EXPOSE 7860
 VOLUME /config
 
-ENTRYPOINT ["/bin/bash","/home/samuel/entrypoint.sh"]
-
-CMD ["/bin/bash","webui.sh"]
+ENTRYPOINT /home/samuel/entrypoint.sh
